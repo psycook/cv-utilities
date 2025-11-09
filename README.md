@@ -5,6 +5,8 @@ This project hosts an Azure Functions application with three HTTP-triggered oper
 - `findCVOnHomepage` crawls a candidate homepage up to three links deep to locate a CV document or the best HTML fallback.
 - `wordToPlainText` converts a base64-encoded Word document to a formatted plain-text representation.
 - `wordToMarkdown` converts a base64-encoded Word document to a Markdown representation.
+- `pdfToPlainText` converts a base64-encoded PDF document to a formatted plain-text representation.
+- `pdfToMarkdown` converts a base64-encoded PDF document to a Markdown representation.
 
 ## Prerequisites
 
@@ -39,13 +41,15 @@ The endpoints will be available under `http://localhost:7071/api/`:
 - `GET /findCVOnHomepage?apiKey=<key>&url=<homepage>`
 - `POST /wordToPlainText`
 - `POST /wordToMarkdown`
+- `POST /pdfToPlainText`
+- `POST /pdfToMarkdown`
 
 For POST operations provide a JSON payload:
 
 ```json
 {
   "apiKey": "<key>",
-  "documentContent": "<base64 docx>"
+  "documentContent": "<base64 docx or pdf>"
 }
 ```
 

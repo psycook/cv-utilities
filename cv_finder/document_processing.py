@@ -9,6 +9,8 @@ from docx import Document
 from docx.document import Document as DocumentType
 from docx.table import Table
 from docx.text.paragraph import Paragraph
+from pdfminer.high_level import extract_text
+from pdfminer.layout import LAParams
 
 
 def decode_base64_document(encoded: str) -> bytes:
@@ -50,6 +52,21 @@ def word_to_markdown(encoded: str) -> str:
         elif isinstance(block, Table):
             lines.extend(_table_to_markdown(block))
     return "\n".join(lines).strip()
+
+
+def pdf_to_plain_text(encoded: str) -> str:
+    text = _extract_pdf_text(encoded)
+    lines = [_clean_line(line) for line in text.splitlines()]
+    collapsed = _collapse_blank_lines(lines)
+    return "\n".join(collapsed).strip()
+
+
+def pdf_to_markdown(encoded: str) -> str:
+    text = _extract_pdf_text(encoded)
+    lines = [_clean_line(line) for line in text.splitlines()]
+    collapsed = _collapse_blank_lines(lines)
+    markdown_lines = [_plain_line_to_markdown(line) for line in collapsed]
+    return "\n".join(markdown_lines).strip()
 
 
 def _iterate_blocks(parent) -> Iterable[Paragraph | Table]:
@@ -125,3 +142,50 @@ def _table_to_markdown(table: Table) -> List[str]:
         markdown_lines.append(f"| {' | '.join(cells)} |")
 
     return markdown_lines
+
+
+def _extract_pdf_text(encoded: str) -> str:
+    raw_bytes = decode_base64_document(encoded)
+    try:
+        laparams = LAParams(line_margin=0.3, char_margin=2.0, word_margin=0.1)
+        return extract_text(BytesIO(raw_bytes), laparams=laparams) or ""
+    except Exception as exc:
+        raise ValueError("Unable to parse PDF document") from exc
+
+
+def _clean_line(line: str) -> str:
+    return line.rstrip()
+
+
+def _collapse_blank_lines(lines: List[str]) -> List[str]:
+    collapsed: List[str] = []
+    blank_streak = 0
+    for line in lines:
+        if line.strip():
+            blank_streak = 0
+            collapsed.append(line)
+        else:
+            if blank_streak == 0:
+                collapsed.append("")
+            blank_streak += 1
+    return collapsed
+
+
+def _plain_line_to_markdown(line: str) -> str:
+    stripped = line.lstrip()
+    if not stripped:
+        return ""
+
+    bullet_chars = {"-", "*", "•", "‣", "◦"}
+    if stripped[0] in bullet_chars:
+        content = stripped.lstrip("-*.•‣◦ ")
+        return f"- {content.strip()}"
+
+    if stripped.isupper() and 1 <= len(stripped.split()) <= 8:
+        return f"## {stripped}"
+
+    numbered_match = stripped.split(".", 1)
+    if len(numbered_match) == 2 and numbered_match[0].isdigit():
+        return f"{numbered_match[0]}. {numbered_match[1].strip()}"
+
+    return stripped

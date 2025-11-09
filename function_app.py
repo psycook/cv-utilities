@@ -7,7 +7,12 @@ import azure.functions as func
 
 from cv_finder.auth import authorize_request, unauthorized_response
 from cv_finder.crawler import CrawlError, crawl_for_document
-from cv_finder.document_processing import word_to_markdown, word_to_plain_text
+from cv_finder.document_processing import (
+    pdf_to_markdown,
+    pdf_to_plain_text,
+    word_to_markdown,
+    word_to_plain_text,
+)
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -84,6 +89,58 @@ def word_to_markdown_handler(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         markdown_output = word_to_markdown(document_content)
+    except ValueError as exc:
+        body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": str(exc)}
+        return func.HttpResponse(json.dumps(body), status_code=400, mimetype="application/json")
+
+    body = {
+        "documentMarkdown": markdown_output,
+        "statusCode": 200,
+        "statusCodeDescription": "OK",
+    }
+    return func.HttpResponse(json.dumps(body), status_code=200, mimetype="application/json")
+
+
+@app.function_name(name="pdfToPlainText")
+@app.route(route="pdfToPlainText", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
+def pdf_to_plain_text_handler(req: func.HttpRequest) -> func.HttpResponse:
+    if not authorize_request(req):
+        return unauthorized_response()
+
+    payload = _safe_json(req)
+    document_content = _extract_document_content(payload)
+    if document_content is None:
+        body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": "documentContent must be provided"}
+        return func.HttpResponse(json.dumps(body), status_code=400, mimetype="application/json")
+
+    try:
+        text_output = pdf_to_plain_text(document_content)
+    except ValueError as exc:
+        body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": str(exc)}
+        return func.HttpResponse(json.dumps(body), status_code=400, mimetype="application/json")
+
+    body = {
+        "documentText": text_output,
+        "statusCode": 200,
+        "statusCodeDescription": "OK",
+    }
+    return func.HttpResponse(json.dumps(body), status_code=200, mimetype="application/json")
+
+
+@app.function_name(name="pdfToMarkdown")
+@app.route(route="pdfToMarkdown", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
+def pdf_to_markdown_handler(req: func.HttpRequest) -> func.HttpResponse:
+    if not authorize_request(req):
+        return unauthorized_response()
+
+    payload = _safe_json(req)
+    document_content = _extract_document_content(payload)
+    if document_content is None:
+        body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": "documentContent must be provided"}
+        return func.HttpResponse(json.dumps(body), status_code=400, mimetype="application/json")
+
+    try:
+        markdown_output = pdf_to_markdown(document_content)
     except ValueError as exc:
         body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": str(exc)}
         return func.HttpResponse(json.dumps(body), status_code=400, mimetype="application/json")

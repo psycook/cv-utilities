@@ -4,3 +4,4 @@ beautifulsoup4
 python-docx
 markdownify
 python-dotenv
+pdfminer.six
