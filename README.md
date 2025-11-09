@@ -1,6 +1,6 @@
 # CV Finder Azure Functions Project
 
-This project hosts an Azure Functions application with three HTTP-triggered operations:
+This project hosts an Azure Functions application with five HTTP-triggered operations:
 
 - `findCVOnHomepage` crawls a candidate homepage up to three links deep to locate a CV document or the best HTML fallback.
 - `wordToPlainText` converts a base64-encoded Word document to a formatted plain-text representation.
@@ -25,9 +25,8 @@ python -m venv .venv
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-# copy local settings template and set secrets
+# copy local settings template for local development overrides
 Copy-Item local.settings.json.example local.settings.json
-# edit local.settings.json to set CV_FINDER_API_KEYS (comma separated list)
 ```
 
 ## Running Locally
@@ -38,7 +37,7 @@ func start
 
 The endpoints will be available under `http://localhost:7071/api/`:
 
-- `GET /findCVOnHomepage?apiKey=<key>&url=<homepage>`
+- `GET /findCVOnHomepage?url=<homepage>`
 - `POST /wordToPlainText`
 - `POST /wordToMarkdown`
 - `POST /pdfToPlainText`
@@ -48,7 +47,6 @@ For POST operations provide a JSON payload:
 
 ```json
 {
-  "apiKey": "<key>",
   "documentContent": "<base64 docx or pdf>"
 }
 ```
@@ -62,8 +60,7 @@ python -m pytest
 ## Deployment
 
 1. Create an Azure Function App resource (Python, Windows or Linux).
-2. Configure the `CV_FINDER_API_KEYS` application setting in the Function App.
-3. Publish via Azure Functions Core Tools:
+2. Publish via Azure Functions Core Tools:
 
    ```pwsh
    func azure functionapp publish <FUNCTION_APP_NAME>

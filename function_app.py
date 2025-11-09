@@ -5,7 +5,6 @@ from typing import Any
 
 import azure.functions as func
 
-from cv_finder.auth import authorize_request, unauthorized_response
 from cv_finder.crawler import CrawlError, crawl_for_document
 from cv_finder.document_processing import (
     pdf_to_markdown,
@@ -20,9 +19,6 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 @app.function_name(name="findCVOnHomepage")
 @app.route(route="findCVOnHomepage", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
 def find_cv_on_homepage(req: func.HttpRequest) -> func.HttpResponse:
-    if not authorize_request(req):
-        return unauthorized_response()
-
     url = req.params.get("url")
     if not url:
         body = {"statusCode": 400, "statusCodeDescription": "Bad Request", "message": "url parameter is required"}
@@ -52,9 +48,6 @@ def find_cv_on_homepage(req: func.HttpRequest) -> func.HttpResponse:
 @app.function_name(name="wordToPlainText")
 @app.route(route="wordToPlainText", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def word_to_plain_text_handler(req: func.HttpRequest) -> func.HttpResponse:
-    if not authorize_request(req):
-        return unauthorized_response()
-
     payload = _safe_json(req)
     document_content = _extract_document_content(payload)
     if document_content is None:
@@ -78,9 +71,6 @@ def word_to_plain_text_handler(req: func.HttpRequest) -> func.HttpResponse:
 @app.function_name(name="wordToMarkdown")
 @app.route(route="wordToMarkdown", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def word_to_markdown_handler(req: func.HttpRequest) -> func.HttpResponse:
-    if not authorize_request(req):
-        return unauthorized_response()
-
     payload = _safe_json(req)
     document_content = _extract_document_content(payload)
     if document_content is None:
@@ -104,9 +94,6 @@ def word_to_markdown_handler(req: func.HttpRequest) -> func.HttpResponse:
 @app.function_name(name="pdfToPlainText")
 @app.route(route="pdfToPlainText", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def pdf_to_plain_text_handler(req: func.HttpRequest) -> func.HttpResponse:
-    if not authorize_request(req):
-        return unauthorized_response()
-
     payload = _safe_json(req)
     document_content = _extract_document_content(payload)
     if document_content is None:
@@ -130,9 +117,6 @@ def pdf_to_plain_text_handler(req: func.HttpRequest) -> func.HttpResponse:
 @app.function_name(name="pdfToMarkdown")
 @app.route(route="pdfToMarkdown", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 def pdf_to_markdown_handler(req: func.HttpRequest) -> func.HttpResponse:
-    if not authorize_request(req):
-        return unauthorized_response()
-
     payload = _safe_json(req)
     document_content = _extract_document_content(payload)
     if document_content is None:
