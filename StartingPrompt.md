@@ -1,4 +1,4 @@
-### Create a Python Project to deploy an Azure Function with three key operations
+### Create a Python Project to deploy an Azure Function with five key operations
 
 Make sure venv is used for managing the python environment.
 
@@ -47,6 +47,36 @@ It should use the same apiKey as Operation 1.
 ## Operation 3 - wordToMarkdown
 
 This function should take the base64 encoded representation of a word document and return the markdown equivilent.  Make sure the markdown text is formatted nicely so it bares resemblence to the original layout and formatting of the word document.
+
+It should use the same apiKey as Operation 1.
+
+**It should return 401 - Unauthorised if the key is not present or incorrect**
+ - statusCode - 401
+ - statusCodeDescription - Unauthorized
+
+**A successful (200) call should return the following fields**
+ - documentMarkdown - the markdown representation of the document
+ - statusCode - 200
+ - statusCodeDescription - OK
+
+ ## Operation 4 - pdfToPlainText
+
+This function should take the base64 encoded representation of a pdf document and return the plain text equivilent.  Make sure the plain text is formatted nicely so it bares resemblence to the original layout and formatting of the pdf document.
+
+It should use the same apiKey as Operation 1.
+
+**It should return 401 - Unauthorised if the key is not present or incorrect**
+ - statusCode - 401
+ - statusCodeDescription - Unauthorized
+
+**A successful (200) call should return the following fields**
+ - documentText - the plain text representation of the document
+ - statusCode - 200
+ - statusCodeDescription - OK
+
+## Operation 5 - pdfToMarkdown
+
+This function should take the base64 encoded representation of a pdf document and return the markdown equivilent.  Make sure the markdown text is formatted nicely so it bares resemblence to the original layout and formatting of the pdf document.
 
 It should use the same apiKey as Operation 1.
 
