@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+local.settings.json
+*.pyc
+*.pyo
+*.pyd
+.Python
+.profile

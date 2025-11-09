@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Date: Sun, 09 Nov 2025 10:41:51 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+{
+  "documentMarkdown": "The Difference Between Cats and Dogs\nA Light-Hearted Comparison\n# Introduction\nWhen it comes to pets, cats and dogs are undoubtedly the nation's favourites. But what truly sets them apart? Let's have a playful look at the unique (and sometimes quirky) qualities that make these furry companions so special.\n## At a Glance: Key Differences\n| Aspect | Cats | Dogs |\n| --- | --- | --- |\n| Personality | Independent, mysterious, aloof | Loyal, outgoing, affectionate |\n| Training | Mostly train themselves (litter), stubborn with tricks | Eager to please, enjoy learning commands |\n| Exercise Needs | Low \u2013 prefers lounging | High \u2013 loves walks and playtime |\n| Noises | Purrs and meows | Barks and howls |\n| Grooming | Self-grooming, low-effort | Requires regular brushing |\n## More Than Just Petty Differences\n- Social Butterflies vs. Lone Rangers: Dogs often crave company and enjoy being the centre of attention, whereas cats tend to appreciate peace, quiet, and perhaps an occasional head scratch when it suits them.\n- Communication Styles: Dogs communicate through tail wags, barks, and the classic puppy-dog eyes. Cats, on the other hand, might blink slowly at you\u2014a sign of deep affection\u2014or simply ignore your existence altogether until dinner time.\n- Humour: Let\u2019s face it, both species provide endless amusement\u2014whether your dog is joyfully chasing its own tail or your cat is plotting world domination from atop the wardrobe.\n## Fun Facts\n- Cats can jump up to six times their body length in one leap. Try that, Fido!\n- Dogs have been man\u2019s best friend for at least 15,000 years\u2014talk about loyalty!\n- Cats use their whiskers to determine if they\u2019ll fit through a gap, while dogs rely on\u2026well, enthusiasm.\n## Conclusion\nIn the grand debate of cats versus dogs, perhaps the real winner is whoever gets to share their home with these wonderful animals. Whether you prefer purrs or tail wags, both bring love, laughter, and a touch of chaos to our lives.",
+  "statusCode": 200,
+  "statusCodeDescription": "OK"
+}
